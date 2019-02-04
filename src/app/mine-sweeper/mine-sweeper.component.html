@@ -11,6 +11,18 @@
   <button *ngIf="game" (click)="start()" class="btn btn-primary border rounded">
     Újrakezdés
   </button>
+  <button
+    (click)="changeLevel(1)"
+    class="btn btn-primary border rounded float-right"
+  >
+    Könnyű (9x9)
+  </button>
+  <button
+    (click)="changeLevel(2)"
+    class="btn btn-primary border rounded float-right"
+  >
+    Nehéz (16x16)
+  </button>
 </div>
 <table class="text-center" *ngIf="game">
   <tr *ngFor="let row of map">

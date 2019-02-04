@@ -1,5 +1,7 @@
 import { Mine } from "./../mine";
 import { Component, OnInit } from "@angular/core";
+import { Level } from "../level.mode";
+import { isNullOrUndefined } from "util";
 
 @Component({
   selector: "app-mine-sweeper",
@@ -7,9 +9,13 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./mine-sweeper.component.css"]
 })
 export class MineSweeperComponent implements OnInit {
-  size: number = 100;
-  rows: number = 10;
-  cols: number = 10;
+  Levels: Level[] = [
+    { id: 1, mines: 10, cols: 9, rows: 9, name: "Könnyű" },
+    { id: 2, mines: 40, cols: 16, rows: 16, name: "Nehéz" }
+  ];
+  rows: number = 9;
+  cols: number = 9;
+  mines: number = 10;
   map = [];
   game: boolean = false;
   end: boolean = false;
@@ -38,7 +44,7 @@ export class MineSweeperComponent implements OnInit {
   }
 
   genMines(): void {
-    let db = this.size / 10;
+    let db = this.mines;
     let x = 0;
     let y = 0;
     do {
@@ -148,5 +154,15 @@ export class MineSweeperComponent implements OnInit {
     this.genMap();
     this.genMines();
     this.genOthers();
+  }
+
+  changeLevel(level: number) {
+    let Level: Level = this.Levels.find(element => element.id == level);
+    if (!isNullOrUndefined(Level)) {
+      this.cols = Level.cols;
+      this.rows = Level.rows;
+      this.mines = Level.mines;
+      this.start();
+    }
   }
 }
