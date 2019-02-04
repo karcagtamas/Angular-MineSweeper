@@ -23,7 +23,7 @@ export class MineComponent implements OnInit {
     }
   }
 
-  rightClick() {
+  rightClick(event) {
     if (!this.mine.isVisible)
       this.RightClick.emit({ x: this.mine.x, y: this.mine.y });
     return false;
