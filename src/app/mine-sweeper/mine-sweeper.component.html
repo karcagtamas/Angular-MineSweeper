@@ -1,3 +1,26 @@
-<p>
-  mine-sweeper works!
-</p>
+<h1 class="text-center">Mine Sweeper</h1>
+
+<div id="group" class="border rounded">
+  <button
+    *ngIf="!game"
+    (click)="start()"
+    class="btn btn-primary border rounded"
+  >
+    Kezdés
+  </button>
+  <button *ngIf="game" (click)="start()" class="btn btn-primary border rounded">
+    Újrakezdés
+  </button>
+</div>
+<table class="text-center" *ngIf="game">
+  <tr *ngFor="let row of map">
+    <td *ngFor="let col of row">
+      <app-mine
+        [mine]="col"
+        (LeftClick)="leftClick($event)"
+        (Bomb)="bomb()"
+        (RightClick)="rightClick($event)"
+      ></app-mine>
+    </td>
+  </tr>
+</table>

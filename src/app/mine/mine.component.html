@@ -1,3 +1,9 @@
-<p>
-  mine works!
-</p>
+<button
+  (click)="leftClick()"
+  (contextmenu)="rightClick($event)"
+  class="btn border rounded text-center"
+>
+  <span *ngIf="mine.isVisible && !mine.isMine">{{ mine.value }}</span>
+  <span *ngIf="mine.isVisible && mine.isMine">BOOM</span>
+  <span *ngIf="!mine.isVisible && mine.isMarked">&#9873;</span>
+</button>
