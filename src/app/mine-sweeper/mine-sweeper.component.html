@@ -23,7 +23,12 @@
   >
     Nehéz (16x16)
   </button>
+  <div id="downside" *ngIf="game" class="row">
+    <div>Aknák száma: {{ mines - marked | count }}</div>
+    <div>Eltelt Idő: {{ time | seconds }}</div>
+  </div>
 </div>
+<h1 class="text-center" *ngIf="end">{{ message }}</h1>
 <table class="text-center" *ngIf="game">
   <tr *ngFor="let row of map">
     <td *ngFor="let col of row">

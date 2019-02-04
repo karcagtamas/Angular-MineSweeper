@@ -12,3 +12,13 @@ button {
   margin-right: 0.5rem;
   margin-left: 0.5rem;
 }
+
+#downside {
+  margin: 0.5rem;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+#downside div {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+}

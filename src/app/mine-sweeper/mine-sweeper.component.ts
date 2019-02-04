@@ -2,6 +2,7 @@ import { Mine } from "./../mine";
 import { Component, OnInit } from "@angular/core";
 import { Level } from "../level.mode";
 import { isNullOrUndefined } from "util";
+import { checkAndUpdateBinding } from "@angular/core/src/view/util";
 
 @Component({
   selector: "app-mine-sweeper",
@@ -19,6 +20,12 @@ export class MineSweeperComponent implements OnInit {
   map = [];
   game: boolean = false;
   end: boolean = false;
+  message: string = "";
+  empty: number = 0;
+  correct: number = 0;
+  marked: number = 0;
+  time: number = 0;
+  interval;
 
   constructor() {}
 
@@ -93,14 +100,19 @@ export class MineSweeperComponent implements OnInit {
   }
 
   leftClick(event) {
-    if (!this.end) this.show(event.x, event.y);
+    if (!this.end) {
+      this.show(event.x, event.y);
+      this.check();
+    }
   }
 
   rightClick(event) {
     if (!this.end) {
       if (this.map[event.x - 1][event.y - 1].isMarked)
         this.map[event.x - 1][event.y - 1].isMarked = false;
-      else this.map[event.x - 1][event.y - 1].isMarked = true;
+      else if (this.mines - this.marked != 0)
+        this.map[event.x - 1][event.y - 1].isMarked = true;
+      this.check();
     }
   }
 
@@ -136,6 +148,8 @@ export class MineSweeperComponent implements OnInit {
 
   bomb() {
     this.end = true;
+    this.stopTimer();
+    this.message = "Legközelebb talán nagyobb szerencséd lesz!";
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
         if (this.map[i][j].isMine) this.map[i][j].isVisible = true;
@@ -147,6 +161,9 @@ export class MineSweeperComponent implements OnInit {
     this.end = false;
     this.game = true;
     this.reset();
+    this.stopTimer();
+    this.time = 0;
+    this.startTimer();
   }
 
   reset(): void {
@@ -154,6 +171,7 @@ export class MineSweeperComponent implements OnInit {
     this.genMap();
     this.genMines();
     this.genOthers();
+    this.check();
   }
 
   changeLevel(level: number) {
@@ -164,5 +182,33 @@ export class MineSweeperComponent implements OnInit {
       this.mines = Level.mines;
       this.start();
     }
+  }
+
+  check(): void {
+    this.empty = 0;
+    this.correct = 0;
+    this.marked = 0;
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        if (this.map[i][j].isVisible && !this.map[i][j].isMine) this.empty++;
+        if (this.map[i][j].isMarked && this.map[i][j].isMine) this.correct++;
+        if (this.map[i][j].isMarked) this.marked++;
+      }
+    }
+    if (this.empty + this.correct == this.cols * this.rows) {
+      this.end = true;
+      this.stopTimer();
+      this.message = "Gratulálunk, nyertél!";
+    }
+  }
+
+  startTimer(): void {
+    this.interval = setInterval(() => {
+      this.time++;
+    }, 1000);
+  }
+
+  stopTimer(): void {
+    clearInterval(this.interval);
   }
 }
