@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Mine } from "../Mine";
+import { Mine } from "../mine";
 
 @Component({
   selector: "app-mine",
