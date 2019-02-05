@@ -1,6 +1,9 @@
+<!-- Cím -->
 <h1 class="text-center">Mine Sweeper</h1>
 
+<!-- Felső panel (gombok) -->
 <div id="group" class="border rounded">
+  <!-- Kezdés gomb -->
   <button
     *ngIf="!game"
     (click)="start()"
@@ -8,23 +11,34 @@
   >
     Kezdés
   </button>
+
+  <!-- Új játék gomb-->
   <button *ngIf="game" (click)="start()" class="btn btn-primary border rounded">
     Új játék
   </button>
+
+  <!-- Könnyú szint gomb -->
   <button
     (click)="changeLevel(1)"
     class="btn btn-primary border rounded float-right"
   >
     Könnyű (9x9)
   </button>
+
+  <!-- Nehéz szint gomb -->
   <button
     (click)="changeLevel(2)"
     class="btn btn-primary border rounded float-right"
   >
     Nehéz (16x16)
   </button>
+
+  <!-- Számáló panel -->
   <div id="downside" *ngIf="game" class="row">
+    <!-- Aknák száma -->
     <div>Aknák száma: {{ mines - marked | count }}</div>
+
+    <!-- Eltelt idő -->
     <div>
       Eltelt Idő: {{ time.day | day }} {{ time.hour | hours }}
       {{ time.min | minutes }}
@@ -32,7 +46,11 @@
     </div>
   </div>
 </div>
+
+<!-- Értesítés -->
 <h1 class="text-center" *ngIf="end">{{ message }}</h1>
+
+<!-- Játék tábla -->
 <table class="text-center" *ngIf="game">
   <tr *ngFor="let row of map">
     <td *ngFor="let col of row">

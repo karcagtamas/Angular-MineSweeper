@@ -1,6 +1,6 @@
 import { Mine } from "./../mine";
 import { Component, OnInit } from "@angular/core";
-import { Level } from "../level.mode";
+import { Level } from "../level.model";
 import { isNullOrUndefined } from "util";
 import { checkAndUpdateBinding } from "@angular/core/src/view/util";
 
@@ -10,27 +10,34 @@ import { checkAndUpdateBinding } from "@angular/core/src/view/util";
   styleUrls: ["./mine-sweeper.component.css"]
 })
 export class MineSweeperComponent implements OnInit {
+  // Szintek
   Levels: Level[] = [
     { id: 1, mines: 10, cols: 9, rows: 9, name: "Könnyű" },
     { id: 2, mines: 40, cols: 16, rows: 16, name: "Nehéz" }
   ];
-  rows: number = 9;
-  cols: number = 9;
-  mines: number = 10;
-  map = [];
-  game: boolean = false;
-  end: boolean = false;
-  message: string = "";
-  empty: number = 0;
-  correct: number = 0;
-  marked: number = 0;
-  time = { day: 0, hour: 0, min: 0, sec: 0 };
-  interval;
+  rows: number = 9; // Sorok
+  cols: number = 9; // Oszlopok
+  mines: number = 10; // Aknák
+  map = []; // Pálya
+
+  game: boolean = false; // Megy-e a játék (ha nem, nem jelenik meg a pálya)
+  end: boolean = false; // Vége van-e a játéknak (ha nem, meg áll a játék és timer)
+  message: string = ""; // Jtál vége értesítése
+
+  empty: number = 0; // Felderített nem aknák száma
+  correct: number = 0; // Megjelölt aknák száma
+  marked: number = 0; // Megjelöltek száma
+
+  time = { day: 0, hour: 0, min: 0, sec: 0 }; // Idők: nap, óra, perc, másodperc
+  interval; // Idő intervallum
 
   constructor() {}
 
   ngOnInit() {}
 
+  // Pálya generálás (elemek legenárálása)
+  // Alap adatok: nem megjelölt, nem látható, nem akna, x és y pozició, érték nulla, id (sorszám)
+  // Sorok legenerálása és annak beszórása a map listába
   genMap(): void {
     for (let i = 0; i < this.rows; i++) {
       let list: Mine[] = [];
@@ -50,6 +57,8 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Megfelelő számú aknál legenerálása
+  // Addig keres helyet, míg meg nem lesz pontosan a kellő szám
   genMines(): void {
     let db = this.mines;
     let x = 0;
@@ -64,6 +73,8 @@ export class MineSweeperComponent implements OnInit {
     } while (db > 0);
   }
 
+  // Minden mezőre kiszámolja, hogy hány akna van a környékén és az lesz az értéke
+  // Végig nézi a nyolc szomszédos mezőt (persze ha van annyi)
   genOthers(): void {
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
@@ -99,6 +110,8 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Bal klikk eseménye
+  // Ha nincs vége, akkor az adott elem legyen látható, majd ellenőrzés
   leftClick(event) {
     if (!this.end) {
       this.show(event.x, event.y);
@@ -106,6 +119,8 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Jobb klikk esemény
+  // Ha nincs vége, akkor ha megjelölte kattintott, akkor deaktiválja, ha nem megjelöltre kattintott és még van kisoztható akna száma, akkor aktiválja a jelölést
   rightClick(event) {
     if (!this.end) {
       if (this.map[event.x - 1][event.y - 1].isMarked)
@@ -116,6 +131,7 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Az x és y koordinátán lévő elemet megjeleníti ha nincs megjelölve és ha az értéke 0, akkor felderíti a környékét
   show(x: number, y: number) {
     if (!this.map[x - 1][y - 1].isMarked) {
       this.map[x - 1][y - 1].isVisible = true;
@@ -148,6 +164,7 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Ha bombára kattinott felderítit az összes bombát, megállítja a jtálkot és a timert
   bomb() {
     this.end = true;
     this.stopTimer();
@@ -159,6 +176,8 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Start esemény, beállítja a jtákot jtákhoz készen
+  // Elinditja a játékot (változó szinten), reseteli a pályát, megállítja a timert, és újraidnítja
   start(): void {
     this.end = false;
     this.game = true;
@@ -168,6 +187,7 @@ export class MineSweeperComponent implements OnInit {
     this.startTimer();
   }
 
+  // Visszaállítja a pályát alapra
   reset(): void {
     this.map = [];
     this.genMap();
@@ -176,6 +196,7 @@ export class MineSweeperComponent implements OnInit {
     this.check();
   }
 
+  // Megváltoztatja a nehzségi szintet az input alapján (1-es vagy 2-es)
   changeLevel(level: number) {
     let Level: Level = this.Levels.find(element => element.id == level);
     if (!isNullOrUndefined(Level)) {
@@ -186,6 +207,8 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Végig nézi a mezőket, megszámolje a bejelölteket, a jól bejelölteket és a felfedett mezőket
+  // Ha sikerült a feladvány megoldása (minden ami nem akna látható és az aknák jelölve vannak)
   check(): void {
     this.empty = 0;
     this.correct = 0;
@@ -204,6 +227,8 @@ export class MineSweeperComponent implements OnInit {
     }
   }
 
+  // Időzítő
+  // Nap, óra, perc, másodperc
   startTimer(): void {
     this.interval = setInterval(() => {
       this.time.sec++;
@@ -222,6 +247,7 @@ export class MineSweeperComponent implements OnInit {
     }, 1000);
   }
 
+  // Időzítő leállítása
   stopTimer(): void {
     clearInterval(this.interval);
   }

@@ -6,11 +6,11 @@ import { AppComponent } from "./app.component";
 import { MineSweeperComponent } from "./mine-sweeper/mine-sweeper.component";
 import { MineComponent } from "./mine/mine.component";
 
-import { CountPipe } from "./pipes/count.pipe";
-import { SecondsPipe } from "./pipes/seconds.pipe";
-import { HoursPipe } from "./pipes/hours.pipe";
-import { MinutesPipe } from "./pipes/minutes.pipe";
-import { DayPipe } from "./pipes/day.pipe";
+import { CountPipe } from "./pipes/count.pipe"; // Darab pipe
+import { SecondsPipe } from "./pipes/seconds.pipe"; // Másodperc pipe
+import { MinutesPipe } from "./pipes/minutes.pipe"; // Perc pipe
+import { HoursPipe } from "./pipes/hours.pipe"; // Óra pip
+import { DayPipe } from "./pipes/day.pipe"; // Nap pip
 
 @NgModule({
   declarations: [

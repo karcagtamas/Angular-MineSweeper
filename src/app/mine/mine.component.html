@@ -1,3 +1,4 @@
+<!-- Gomb -->
 <button
   (click)="leftClick()"
   (contextmenu)="rightClick($event)"
@@ -7,7 +8,12 @@
     mine.isVisible && mine.isMine ? 'mine' : ''
   }}"
 >
+  <!-- Sima érték-->
   <span *ngIf="mine.isVisible && !mine.isMine">{{ mine.value }}</span>
+
+  <!-- Bomba érték -->
   <span *ngIf="mine.isVisible && mine.isMine" class="fas fa-bomb"></span>
+
+  <!-- Jelölt érték -->
   <span *ngIf="!mine.isVisible && mine.isMarked">&#9873;</span>
 </button>
