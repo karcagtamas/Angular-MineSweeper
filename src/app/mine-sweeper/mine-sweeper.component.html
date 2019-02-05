@@ -9,7 +9,7 @@
     Kezdés
   </button>
   <button *ngIf="game" (click)="start()" class="btn btn-primary border rounded">
-    Újrakezdés
+    Új játék
   </button>
   <button
     (click)="changeLevel(1)"
@@ -25,7 +25,11 @@
   </button>
   <div id="downside" *ngIf="game" class="row">
     <div>Aknák száma: {{ mines - marked | count }}</div>
-    <div>Eltelt Idő: {{ time | seconds }}</div>
+    <div>
+      Eltelt Idő: {{ time.day | day }} {{ time.hour | hours }}
+      {{ time.min | minutes }}
+      {{ time.sec | seconds }}
+    </div>
   </div>
 </div>
 <h1 class="text-center" *ngIf="end">{{ message }}</h1>

@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-  name: "seconds"
+  name: "day"
 })
-export class SecondsPipe implements PipeTransform {
+export class DayPipe implements PipeTransform {
   transform(value: number, args?: any): any {
-    return value + " s";
+    return value + " nap";
   }
 }

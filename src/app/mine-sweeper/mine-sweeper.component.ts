@@ -24,7 +24,7 @@ export class MineSweeperComponent implements OnInit {
   empty: number = 0;
   correct: number = 0;
   marked: number = 0;
-  time: number = 0;
+  time = { day: 0, hour: 0, min: 0, sec: 0 };
   interval;
 
   constructor() {}
@@ -164,7 +164,7 @@ export class MineSweeperComponent implements OnInit {
     this.game = true;
     this.reset();
     this.stopTimer();
-    this.time = 0;
+    this.time = { day: 0, hour: 0, min: 0, sec: 0 };
     this.startTimer();
   }
 
@@ -206,7 +206,19 @@ export class MineSweeperComponent implements OnInit {
 
   startTimer(): void {
     this.interval = setInterval(() => {
-      this.time++;
+      this.time.sec++;
+      if (this.time.sec == 60) {
+        this.time.min++;
+        this.time.sec = 0;
+      }
+      if (this.time.min == 60) {
+        this.time.hour++;
+        this.time.min = 0;
+      }
+      if (this.time.hour == 24) {
+        this.time.day++;
+        this.time.hour = 0;
+      }
     }, 1000);
   }
 
