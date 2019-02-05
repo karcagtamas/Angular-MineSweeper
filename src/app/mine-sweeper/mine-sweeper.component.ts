@@ -117,31 +117,33 @@ export class MineSweeperComponent implements OnInit {
   }
 
   show(x: number, y: number) {
-    this.map[x - 1][y - 1].isVisible = true;
-    if (this.map[x - 1][y - 1].value == 0) {
-      if (x != 1) {
-        if (!this.map[x - 2][y - 1].isVisible) this.show(x - 1, y);
-      }
-      if (x != this.rows) {
-        if (!this.map[x][y - 1].isVisible) this.show(x + 1, y);
-      }
-      if (y != 1) {
-        if (!this.map[x - 1][y - 2].isVisible) this.show(x, y - 1);
-      }
-      if (y != this.cols) {
-        if (!this.map[x - 1][y].isVisible) this.show(x, y + 1);
-      }
-      if (x != 1 && y != 1) {
-        if (!this.map[x - 2][y - 2].isVisible) this.show(x - 1, y - 1);
-      }
-      if (x != 1 && y != this.cols) {
-        if (!this.map[x - 2][y].isVisible) this.show(x - 1, y + 1);
-      }
-      if (x != this.rows && y != 1) {
-        if (!this.map[x][y - 2].isVisible) this.show(x + 1, y - 1);
-      }
-      if (x != this.rows && y != this.cols) {
-        if (!this.map[x][y].isVisible) this.show(x + 1, y + 1);
+    if (!this.map[x - 1][y - 1].isMarked) {
+      this.map[x - 1][y - 1].isVisible = true;
+      if (this.map[x - 1][y - 1].value == 0) {
+        if (x != 1) {
+          if (!this.map[x - 2][y - 1].isVisible) this.show(x - 1, y);
+        }
+        if (x != this.rows) {
+          if (!this.map[x][y - 1].isVisible) this.show(x + 1, y);
+        }
+        if (y != 1) {
+          if (!this.map[x - 1][y - 2].isVisible) this.show(x, y - 1);
+        }
+        if (y != this.cols) {
+          if (!this.map[x - 1][y].isVisible) this.show(x, y + 1);
+        }
+        if (x != 1 && y != 1) {
+          if (!this.map[x - 2][y - 2].isVisible) this.show(x - 1, y - 1);
+        }
+        if (x != 1 && y != this.cols) {
+          if (!this.map[x - 2][y].isVisible) this.show(x - 1, y + 1);
+        }
+        if (x != this.rows && y != 1) {
+          if (!this.map[x][y - 2].isVisible) this.show(x + 1, y - 1);
+        }
+        if (x != this.rows && y != this.cols) {
+          if (!this.map[x][y].isVisible) this.show(x + 1, y + 1);
+        }
       }
     }
   }

@@ -3,7 +3,11 @@
   (contextmenu)="rightClick($event)"
   class="btn border rounded text-center"
 >
-  <span *ngIf="mine.isVisible && !mine.isMine">{{ mine.value }}</span>
-  <span *ngIf="mine.isVisible && mine.isMine">BOOM</span>
+  <span
+    *ngIf="mine.isVisible && !mine.isMine"
+    class="{{ 'color' + mine.value }}"
+    >{{ mine.value }}</span
+  >
+  <span *ngIf="mine.isVisible && mine.isMine" class="fas fa-bomb"></span>
   <span *ngIf="!mine.isVisible && mine.isMarked">&#9873;</span>
 </button>
