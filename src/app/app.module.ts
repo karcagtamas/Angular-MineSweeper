@@ -21,10 +21,10 @@ import { DayPipe } from "./pipes/day.pipe"; // Nap pip
     SecondsPipe,
     HoursPipe,
     MinutesPipe,
-    DayPipe
+    DayPipe,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
