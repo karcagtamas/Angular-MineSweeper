@@ -1,35 +1,53 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Mine } from "../mine";
+import { Component, Output, EventEmitter, input, output } from "@angular/core";
+import { Mine } from "../models/mine";
+import { Coord } from "../models/coord";
 
 @Component({
   selector: "app-mine",
   templateUrl: "./mine.component.html",
-  styleUrls: ["./mine.component.css"]
+  styleUrls: ["./mine.component.scss"],
 })
-export class MineComponent implements OnInit {
-  @Input() mine: Mine; // Input akna érték
-  @Output() LeftClick = new EventEmitter(); // Bal Klikk esemány meghívása
-  @Output() Bomb = new EventEmitter(); // Bomba esemény meghívása
-  @Output() RightClick = new EventEmitter(); // Jobb Klikk esemény meghívása
+export class MineComponent {
+  protected mine = input.required<Mine>(); // Mine
 
-  constructor() {}
+  protected leftClick = output<Coord>();
+  protected rightClick = output<Coord>();
+  protected bomb = output<void>();
 
-  ngOnInit() {}
-
-  // Bal klikk esemény
-  // Ha akna, akkor a bomb esemény hívja meg, egyébként a Bal klikk eseményt
-  leftClick() {
-    if (!this.mine.isVisible && !this.mine.isMarked) {
-      if (this.mine.isMine) this.Bomb.emit();
-      else this.LeftClick.emit({ x: this.mine.x, y: this.mine.y });
-    }
+  /**
+   * Handling left click
+   * If the tile is mine, call bomb event, otherwise the left click event will be called
+   */
+  handleLeftClick() {
+    this.withMine((mine) => {
+      if (!mine.isVisible && !mine.isMarked) {
+        if (mine.isMine) {
+          this.bomb.emit();
+        } else {
+          this.leftClick.emit({ x: mine.x, y: mine.y });
+        }
+      }
+    });
   }
 
-  // Jobb klikk esemény
-  // Ha nem látható, meghívja a Jobb klikk eseményt
-  rightClick(event) {
-    if (!this.mine.isVisible)
-      this.RightClick.emit({ x: this.mine.x, y: this.mine.y });
+  /**
+   * Handling right click
+   * If it's not visible, it will call the right click event
+   */
+  handleRightClick() {
+    this.withMine((mine) => {
+      if (!mine.isVisible) {
+        this.rightClick.emit({ x: mine.x, y: mine.y });
+      }
+    });
     return false;
+  }
+
+  private withMine(fn: (mine: Mine) => void): void {
+    const mine = this.mine();
+
+    if (mine) {
+      fn(mine);
+    }
   }
 }

@@ -1,19 +1,20 @@
-<!-- Gomb -->
+<!-- Button -->
 <button
-  (click)="leftClick()"
-  (contextmenu)="rightClick($event)"
-  class="btn border rounded text- {{
-    mine.value >= 0 && mine.isVisible ? 'color' + mine.value : ''
-  }} {{ mine.isMarked ? 'mark' : '' }} {{
-    mine.isVisible && mine.isMine ? 'mine' : ''
+  (click)="handleLeftClick()"
+  (contextmenu)="handleRightClick()"
+  class="btn border rounded {{
+    mine().value >= 0 && mine().isVisible ? 'color' + mine().value : ''
   }}"
+  [ngClass]="{ mine: mine().isVisible && mine().isMine, mark: mine().isMarked }"
 >
-  <!-- Sima érték-->
-  <span *ngIf="mine.isVisible && !mine.isMine">{{ mine.value }}</span>
-
-  <!-- Bomba érték -->
-  <span *ngIf="mine.isVisible && mine.isMine" class="fas fa-bomb"></span>
-
-  <!-- Jelölt érték -->
-  <span *ngIf="!mine.isVisible && mine.isMarked">&#9873;</span>
+  @if (mine().isVisible) { @if (mine().isMine) {
+  <!-- Simple value -->
+  <span class="fas fa-bomb"></span>
+  } @else {
+  <!-- Bomb value -->
+  <span>{{ mine().value }}</span>
+  } } @else { @if (mine().isMarked) {
+  <!-- Marked value -->
+  <span>&#9873;</span>
+  } }
 </button>

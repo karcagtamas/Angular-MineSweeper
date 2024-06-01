@@ -1,11 +1,12 @@
-import { Mine } from "./../mine";
+import { Mine } from "../models/mine";
 import { Component, OnInit } from "@angular/core";
-import { Level } from "../level.model";
+import { Level } from "../models/level.model";
+import { Coord } from "../models/coord";
 
 @Component({
   selector: "app-mine-sweeper",
   templateUrl: "./mine-sweeper.component.html",
-  styleUrls: ["./mine-sweeper.component.css"],
+  styleUrls: ["./mine-sweeper.component.scss"],
 })
 export class MineSweeperComponent implements OnInit {
   // Szintek
@@ -110,21 +111,21 @@ export class MineSweeperComponent implements OnInit {
 
   // Bal klikk eseménye
   // Ha nincs vége, akkor az adott elem legyen látható, majd ellenőrzés
-  leftClick(event) {
+  leftClick(coord: Coord) {
     if (!this.end) {
-      this.show(event.x, event.y);
+      this.show(coord.x, coord.y);
       this.check();
     }
   }
 
   // Jobb klikk esemény
   // Ha nincs vége, akkor ha megjelölte kattintott, akkor deaktiválja, ha nem megjelöltre kattintott és még van kisoztható akna száma, akkor aktiválja a jelölést
-  rightClick(event) {
+  rightClick(coord: Coord) {
     if (!this.end) {
-      if (this.map[event.x - 1][event.y - 1].isMarked)
-        this.map[event.x - 1][event.y - 1].isMarked = false;
+      if (this.map[coord.x - 1][coord.y - 1].isMarked)
+        this.map[coord.x - 1][coord.y - 1].isMarked = false;
       else if (this.mines - this.marked != 0)
-        this.map[event.x - 1][event.y - 1].isMarked = true;
+        this.map[coord.x - 1][coord.y - 1].isMarked = true;
       this.check();
     }
   }

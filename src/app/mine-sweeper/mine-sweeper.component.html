@@ -56,9 +56,9 @@
     <td *ngFor="let col of row">
       <app-mine
         [mine]="col"
-        (LeftClick)="leftClick($event)"
-        (Bomb)="bomb()"
-        (RightClick)="rightClick($event)"
+        (leftClick)="leftClick($event)"
+        (bomb)="bomb()"
+        (rightClick)="rightClick($event)"
       ></app-mine>
     </td>
   </tr>
