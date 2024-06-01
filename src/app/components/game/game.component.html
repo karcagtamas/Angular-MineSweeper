@@ -1,5 +1,14 @@
-<!-- Cím -->
-<h1 class="text-center">Mine Sweeper</h1>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Mine Sweeper</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <button mat-raised-button (click)="start()">
+      @if(game) { <span>Reset</span> } @else { <span>Start</span> }
+    </button>
+    <button mat-raised-button (click)="changeLevel()">Change Level</button>
+  </mat-card-actions>
+</mat-card>
 
 <!-- Felső panel (gombok) -->
 <div id="group" class="border rounded">
@@ -15,22 +24,6 @@
   <!-- Új játék gomb-->
   <button *ngIf="game" (click)="start()" class="btn btn-primary border rounded">
     Új játék
-  </button>
-
-  <!-- Könnyú szint gomb -->
-  <button
-    (click)="changeLevel(1)"
-    class="btn btn-primary border rounded float-right"
-  >
-    Könnyű (9x9)
-  </button>
-
-  <!-- Nehéz szint gomb -->
-  <button
-    (click)="changeLevel(2)"
-    class="btn btn-primary border rounded float-right"
-  >
-    Nehéz (16x16)
   </button>
 
   <!-- Számáló panel -->

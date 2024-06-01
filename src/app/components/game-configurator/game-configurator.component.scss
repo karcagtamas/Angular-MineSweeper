@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+
+mat-card,
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-content {
+  padding-top: 1rem;
+}

@@ -1,19 +1,15 @@
-import { Mine } from "../models/mine";
+import { Mine } from "../../models/mine";
 import { Component, OnInit } from "@angular/core";
-import { Level } from "../models/level.model";
-import { Coord } from "../models/coord";
+import { Level } from "../../models/level.model";
+import { Coord } from "../../models/coord";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
-  selector: "app-mine-sweeper",
-  templateUrl: "./mine-sweeper.component.html",
-  styleUrls: ["./mine-sweeper.component.scss"],
+  selector: "app-game",
+  templateUrl: "./game.component.html",
+  styleUrls: ["./game.component.scss"],
 })
-export class MineSweeperComponent implements OnInit {
-  // Szintek
-  Levels: Level[] = [
-    { id: 1, mines: 10, cols: 9, rows: 9, name: "Könnyű" },
-    { id: 2, mines: 40, cols: 16, rows: 16, name: "Nehéz" },
-  ];
+export class GameComponent implements OnInit {
   rows: number = 9; // Sorok
   cols: number = 9; // Oszlopok
   mines: number = 10; // Aknák
@@ -30,9 +26,19 @@ export class MineSweeperComponent implements OnInit {
   time = { day: 0, hour: 0, min: 0, sec: 0 }; // Idők: nap, óra, perc, másodperc
   interval; // Idő intervallum
 
-  constructor() {}
+  constructor(protected router: Router, route: ActivatedRoute) {
+    const level: Level = route.snapshot.data.level;
 
-  ngOnInit() {}
+    this.rows = level.rows;
+    this.cols = level.cols;
+    this.mines = level.mines;
+  }
+
+  ngOnInit(): void {}
+
+  protected changeLevel() {
+    this.router.navigateByUrl("/");
+  }
 
   // Pálya generálás (elemek legenárálása)
   // Alap adatok: nem megjelölt, nem látható, nem akna, x és y pozició, érték nulla, id (sorszám)
@@ -193,17 +199,6 @@ export class MineSweeperComponent implements OnInit {
     this.genMines();
     this.genOthers();
     this.check();
-  }
-
-  // Megváltoztatja a nehzségi szintet az input alapján (1-es vagy 2-es)
-  changeLevel(level: number) {
-    let Level: Level = this.Levels.find((element) => element.id == level);
-    if (!Level) {
-      this.cols = Level.cols;
-      this.rows = Level.rows;
-      this.mines = Level.mines;
-      this.start();
-    }
   }
 
   // Végig nézi a mezőket, megszámolje a bejelölteket, a jól bejelölteket és a felfedett mezőket

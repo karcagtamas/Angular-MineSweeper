@@ -1,0 +1,26 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Configuration of Mine Sweeper</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field>
+      <mat-label>Level</mat-label>
+      <mat-select [(value)]="selected">
+        @for(level of levels; track level) {
+        <mat-option [value]="level.id"> {{ level.name }} </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (selected) {
+    <div>
+      {{ selected | level : levels }}
+    </div>
+    }
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="select(selected)" [disabled]="!selected">
+      Start
+    </button>
+  </mat-card-actions>
+</mat-card>
