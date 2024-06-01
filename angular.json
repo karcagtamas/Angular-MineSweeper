@@ -109,5 +109,7 @@
       }
     }
   },
-  "defaultProject": "mine-sweeper"
+  "cli": {
+    "analytics": "2f9276c4-2224-43af-9bf9-5ea4b4c0fe57"
+  }
 }
