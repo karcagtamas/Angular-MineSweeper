@@ -1,19 +1,17 @@
 import { Mine } from "./../mine";
 import { Component, OnInit } from "@angular/core";
 import { Level } from "../level.model";
-import { isNullOrUndefined } from "util";
-import { checkAndUpdateBinding } from "@angular/core/src/view/util";
 
 @Component({
   selector: "app-mine-sweeper",
   templateUrl: "./mine-sweeper.component.html",
-  styleUrls: ["./mine-sweeper.component.css"]
+  styleUrls: ["./mine-sweeper.component.css"],
 })
 export class MineSweeperComponent implements OnInit {
   // Szintek
   Levels: Level[] = [
     { id: 1, mines: 10, cols: 9, rows: 9, name: "Könnyű" },
-    { id: 2, mines: 40, cols: 16, rows: 16, name: "Nehéz" }
+    { id: 2, mines: 40, cols: 16, rows: 16, name: "Nehéz" },
   ];
   rows: number = 9; // Sorok
   cols: number = 9; // Oszlopok
@@ -49,7 +47,7 @@ export class MineSweeperComponent implements OnInit {
           isMine: false,
           isVisible: false,
           x: i + 1,
-          y: j + 1
+          y: j + 1,
         };
         list.push(mine);
       }
@@ -198,8 +196,8 @@ export class MineSweeperComponent implements OnInit {
 
   // Megváltoztatja a nehzségi szintet az input alapján (1-es vagy 2-es)
   changeLevel(level: number) {
-    let Level: Level = this.Levels.find(element => element.id == level);
-    if (!isNullOrUndefined(Level)) {
+    let Level: Level = this.Levels.find((element) => element.id == level);
+    if (!Level) {
       this.cols = Level.cols;
       this.rows = Level.rows;
       this.mines = Level.mines;
