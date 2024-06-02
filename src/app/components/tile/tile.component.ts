@@ -1,13 +1,13 @@
 import { Component, Output, EventEmitter, input, output } from "@angular/core";
-import { Mine } from "../models/mine";
-import { Coord } from "../models/coord";
+import { Mine } from "../../models/mine";
+import { Coord } from "../../models/coord";
 
 @Component({
-  selector: "app-mine",
-  templateUrl: "./mine.component.html",
-  styleUrls: ["./mine.component.scss"],
+  selector: "app-tile",
+  templateUrl: "./tile.component.html",
+  styleUrls: ["./tile.component.scss"],
 })
-export class MineComponent {
+export class TileComponent {
   protected mine = input.required<Mine>(); // Mine
 
   protected leftClick = output<Coord>();

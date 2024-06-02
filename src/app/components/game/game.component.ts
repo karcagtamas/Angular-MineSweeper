@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { Level } from "../../models/level.model";
 import { Coord } from "../../models/coord";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ElapsedTime } from "src/app/models/time";
 
 @Component({
   selector: "app-game",
@@ -10,28 +11,44 @@ import { ActivatedRoute, Router } from "@angular/router";
   styleUrls: ["./game.component.scss"],
 })
 export class GameComponent implements OnInit {
-  rows: number = 9; // Sorok
-  cols: number = 9; // Oszlopok
-  mines: number = 10; // Aknák
-  map = []; // Pálya
+  private readonly currentLevel: Level = {
+    id: 0,
+    rows: 9,
+    cols: 9,
+    mines: 10,
+    name: "DEFAULT",
+  };
+  map: Mine[][] = []; // Pálya
 
   game: boolean = false; // Megy-e a játék (ha nem, nem jelenik meg a pálya)
   end: boolean = false; // Vége van-e a játéknak (ha nem, meg áll a játék és timer)
-  message: string = ""; // Jtál vége értesítése
+  protected message: string = ""; // Message
 
-  empty: number = 0; // Felderített nem aknák száma
-  correct: number = 0; // Megjelölt aknák száma
-  marked: number = 0; // Megjelöltek száma
+  protected status: { empty: number; correct: number; marked: number } = {
+    empty: 0,
+    correct: 0,
+    marked: 0,
+  };
 
-  time = { day: 0, hour: 0, min: 0, sec: 0 }; // Idők: nap, óra, perc, másodperc
-  interval; // Idő intervallum
+  protected time: ElapsedTime = { day: 0, hour: 0, min: 0, sec: 0 }; // Idők: nap, óra, perc, másodperc
+  private interval: NodeJS.Timeout | null = null; // Idő intervallum
 
   constructor(protected router: Router, route: ActivatedRoute) {
     const level: Level = route.snapshot.data.level;
 
-    this.rows = level.rows;
-    this.cols = level.cols;
-    this.mines = level.mines;
+    this.currentLevel = { ...level };
+  }
+
+  public get rows(): number {
+    return this.currentLevel.rows;
+  }
+
+  public get cols(): number {
+    return this.currentLevel.cols;
+  }
+
+  public get mines(): number {
+    return this.currentLevel.mines;
   }
 
   ngOnInit(): void {}
@@ -130,7 +147,7 @@ export class GameComponent implements OnInit {
     if (!this.end) {
       if (this.map[coord.x - 1][coord.y - 1].isMarked)
         this.map[coord.x - 1][coord.y - 1].isMarked = false;
-      else if (this.mines - this.marked != 0)
+      else if (this.mines - this.status.marked != 0)
         this.map[coord.x - 1][coord.y - 1].isMarked = true;
       this.check();
     }
@@ -204,17 +221,20 @@ export class GameComponent implements OnInit {
   // Végig nézi a mezőket, megszámolje a bejelölteket, a jól bejelölteket és a felfedett mezőket
   // Ha sikerült a feladvány megoldása (minden ami nem akna látható és az aknák jelölve vannak)
   check(): void {
-    this.empty = 0;
-    this.correct = 0;
-    this.marked = 0;
+    let empty = 0;
+    let correct = 0;
+    let marked = 0;
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
-        if (this.map[i][j].isVisible && !this.map[i][j].isMine) this.empty++;
-        if (this.map[i][j].isMarked && this.map[i][j].isMine) this.correct++;
-        if (this.map[i][j].isMarked) this.marked++;
+        if (this.map[i][j].isVisible && !this.map[i][j].isMine) empty++;
+        if (this.map[i][j].isMarked && this.map[i][j].isMine) correct++;
+        if (this.map[i][j].isMarked) marked++;
       }
     }
-    if (this.empty + this.correct == this.cols * this.rows) {
+
+    this.status = { empty, correct, marked };
+
+    if (this.status.empty + this.status.correct == this.cols * this.rows) {
       this.end = true;
       this.stopTimer();
       this.message = "Gratulálunk, nyertél!";
@@ -223,26 +243,31 @@ export class GameComponent implements OnInit {
 
   // Időzítő
   // Nap, óra, perc, másodperc
-  startTimer(): void {
+  private startTimer(): void {
     this.interval = setInterval(() => {
-      this.time.sec++;
-      if (this.time.sec == 60) {
-        this.time.min++;
-        this.time.sec = 0;
+      const time = { ...this.time };
+      time.sec++;
+      if (time.sec == 60) {
+        time.min++;
+        time.sec = 0;
       }
-      if (this.time.min == 60) {
-        this.time.hour++;
-        this.time.min = 0;
+      if (time.min == 60) {
+        time.hour++;
+        time.min = 0;
       }
-      if (this.time.hour == 24) {
-        this.time.day++;
-        this.time.hour = 0;
+      if (time.hour == 24) {
+        time.day++;
+        time.hour = 0;
       }
+
+      this.time = { ...time };
     }, 1000);
   }
 
   // Időzítő leállítása
-  stopTimer(): void {
-    clearInterval(this.interval);
+  private stopTimer(): void {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
   }
 }
