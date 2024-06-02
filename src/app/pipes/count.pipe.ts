@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-  name: "count"
+  name: "count",
 })
 export class CountPipe implements PipeTransform {
   transform(value: number, args?: any): any {
-    return value + " db";
+    return value + " ct.";
   }
 }

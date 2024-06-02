@@ -57,12 +57,12 @@ export class GameComponent implements OnInit {
     this.router.navigateByUrl("/");
   }
 
-  // Pálya generálás (elemek legenárálása)
-  // Alap adatok: nem megjelölt, nem látható, nem akna, x és y pozició, érték nulla, id (sorszám)
-  // Sorok legenerálása és annak beszórása a map listába
-  genMap(): void {
+  /**
+   * Generate the rows and columns. All cells have basic settings and coordinate data.
+   */
+  private generateMap(): void {
     for (let i = 0; i < this.rows; i++) {
-      let list: Mine[] = [];
+      let row: Mine[] = [];
       for (let j = 0; j < this.cols; j++) {
         let mine: Mine = {
           value: 0,
@@ -73,16 +73,17 @@ export class GameComponent implements OnInit {
           x: i + 1,
           y: j + 1,
         };
-        list.push(mine);
+        row.push(mine);
       }
-      this.map.push(list);
+      this.map.push(row);
     }
   }
 
-  // Megfelelő számú aknál legenerálása
-  // Addig keres helyet, míg meg nem lesz pontosan a kellő szám
-  genMines(): void {
-    let db = this.mines;
+  /**
+   * Select mine tiles randomly.
+   */
+  private selectMines(mines: number): void {
+    let db = mines;
     let x = 0;
     let y = 0;
     do {
@@ -91,116 +92,104 @@ export class GameComponent implements OnInit {
       if (!this.map[x][y].isMine) {
         db--;
         this.map[x][y].isMine = true;
+        this.map[x][y].value = -1;
       }
     } while (db > 0);
   }
 
-  // Minden mezőre kiszámolja, hogy hány akna van a környékén és az lesz az értéke
-  // Végig nézi a nyolc szomszédos mezőt (persze ha van annyi)
-  genOthers(): void {
+  /**
+   * Calculate the values of the cells. The cell value is equal to the count of the mine neighbours.
+   */
+  private calculateMineNeighbours(): void {
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
-        if (!this.map[i][j].isMine) {
-          let count = 0;
-          if (i != 0) {
-            if (this.map[i - 1][j].isMine) count++;
-          }
-          if (i != this.rows - 1) {
-            if (this.map[i + 1][j].isMine) count++;
-          }
-          if (j != 0) {
-            if (this.map[i][j - 1].isMine) count++;
-          }
-          if (j != this.cols - 1) {
-            if (this.map[i][j + 1].isMine) count++;
-          }
-          if (i != 0 && j != 0) {
-            if (this.map[i - 1][j - 1].isMine) count++;
-          }
-          if (i != 0 && j != this.cols - 1) {
-            if (this.map[i - 1][j + 1].isMine) count++;
-          }
-          if (i != this.rows - 1 && j != 0) {
-            if (this.map[i + 1][j - 1].isMine) count++;
-          }
-          if (i != this.rows - 1 && j != this.cols - 1) {
-            if (this.map[i + 1][j + 1].isMine) count++;
-          }
-          this.map[i][j].value = count;
-        } else this.map[i][j].value = -1;
+        const cell = this.map[i][j];
+        if (cell.isMine) {
+          this.walkthroughNeighbours(i, j, (x, y) => {
+            const inner = this.map[x][y];
+
+            if (!inner.isMine) {
+              inner.value = inner.value + 1;
+            }
+          });
+        }
       }
     }
   }
 
-  // Bal klikk eseménye
-  // Ha nincs vége, akkor az adott elem legyen látható, majd ellenőrzés
-  leftClick(coord: Coord) {
+  /**
+   * Handle left click. Show the tile and check the game status.
+   * @param coord The clicked coordinate
+   */
+  protected leftClick(coord: Coord) {
     if (!this.end) {
       this.show(coord.x, coord.y);
       this.check();
     }
   }
 
-  // Jobb klikk esemény
-  // Ha nincs vége, akkor ha megjelölte kattintott, akkor deaktiválja, ha nem megjelöltre kattintott és még van kisoztható akna száma, akkor aktiválja a jelölést
-  rightClick(coord: Coord) {
+  /**
+   * Handle right click. Mark or dismark the selected tile.
+   * @param coord The clicked coordinate
+   */
+  protected rightClick(coord: Coord) {
     if (!this.end) {
-      if (this.map[coord.x - 1][coord.y - 1].isMarked)
-        this.map[coord.x - 1][coord.y - 1].isMarked = false;
-      else if (this.mines - this.status.marked != 0)
-        this.map[coord.x - 1][coord.y - 1].isMarked = true;
+      const cell = this.map[coord.x - 1][coord.y - 1];
+      if (this.mines - this.status.marked !== 0 || cell.isMarked) {
+        cell.isMarked = !cell.isMarked;
+      }
+
       this.check();
     }
   }
 
   // Az x és y koordinátán lévő elemet megjeleníti ha nincs megjelölve és ha az értéke 0, akkor felderíti a környékét
-  show(x: number, y: number) {
-    if (!this.map[x - 1][y - 1].isMarked) {
-      this.map[x - 1][y - 1].isVisible = true;
-      if (this.map[x - 1][y - 1].value == 0) {
-        if (x != 1) {
-          if (!this.map[x - 2][y - 1].isVisible) this.show(x - 1, y);
-        }
-        if (x != this.rows) {
-          if (!this.map[x][y - 1].isVisible) this.show(x + 1, y);
-        }
-        if (y != 1) {
-          if (!this.map[x - 1][y - 2].isVisible) this.show(x, y - 1);
-        }
-        if (y != this.cols) {
-          if (!this.map[x - 1][y].isVisible) this.show(x, y + 1);
-        }
-        if (x != 1 && y != 1) {
-          if (!this.map[x - 2][y - 2].isVisible) this.show(x - 1, y - 1);
-        }
-        if (x != 1 && y != this.cols) {
-          if (!this.map[x - 2][y].isVisible) this.show(x - 1, y + 1);
-        }
-        if (x != this.rows && y != 1) {
-          if (!this.map[x][y - 2].isVisible) this.show(x + 1, y - 1);
-        }
-        if (x != this.rows && y != this.cols) {
-          if (!this.map[x][y].isVisible) this.show(x + 1, y + 1);
-        }
+  /**
+   * Show tile on the X and Y coordinate. If the tile has 0 value, the the neighbours will appear recursively
+   * @param x X
+   * @param y Y
+   */
+  protected show(x: number, y: number) {
+    const cell = this.map[x - 1][y - 1];
+    if (!cell.isMarked && !cell.isMine) {
+      cell.isVisible = true;
+
+      // Show neighbours
+      if (cell.value == 0) {
+        this.walkthroughNeighbours(x - 1, y - 1, (xi, yj) => {
+          const inner = this.map[xi][yj];
+
+          if (!inner.isVisible) {
+            this.show(xi + 1, yj + 1);
+          }
+        });
       }
     }
   }
 
-  // Ha bombára kattinott felderítit az összes bombát, megállítja a jtálkot és a timert
-  bomb() {
+  /**
+   * Handle click on bomb. It stops the game and the timer.
+   */
+  protected bomb() {
     this.end = true;
     this.stopTimer();
-    this.message = "Legközelebb talán nagyobb szerencséd lesz!";
+    this.message = "Have luck next time!";
+
+    // Show
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
-        if (this.map[i][j].isMine) this.map[i][j].isVisible = true;
+        const cell = this.map[i][j];
+        if (cell.isMine) {
+          cell.isVisible = true;
+        }
       }
     }
   }
 
-  // Start esemény, beállítja a jtákot jtákhoz készen
-  // Elinditja a játékot (változó szinten), reseteli a pályát, megállítja a timert, és újraidnítja
-  start(): void {
+  /**
+   * Make the game ready and start it.
+   */
+  protected start(): void {
     this.end = false;
     this.game = true;
     this.reset();
@@ -209,26 +198,39 @@ export class GameComponent implements OnInit {
     this.startTimer();
   }
 
-  // Visszaállítja a pályát alapra
-  reset(): void {
+  /**
+   * Reset game state
+   */
+  private reset(): void {
     this.map = [];
-    this.genMap();
-    this.genMines();
-    this.genOthers();
+    this.message = "";
+    this.generateMap();
+    this.selectMines(this.mines);
+    this.calculateMineNeighbours();
     this.check();
   }
 
-  // Végig nézi a mezőket, megszámolje a bejelölteket, a jól bejelölteket és a felfedett mezőket
-  // Ha sikerült a feladvány megoldása (minden ami nem akna látható és az aknák jelölve vannak)
-  check(): void {
+  /**
+   * Checking the game state. Count the empty cells, correctly marked cells and just marked cells. Finish the game when all mine is marked.
+   */
+  private check(): void {
     let empty = 0;
     let correct = 0;
     let marked = 0;
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
-        if (this.map[i][j].isVisible && !this.map[i][j].isMine) empty++;
-        if (this.map[i][j].isMarked && this.map[i][j].isMine) correct++;
-        if (this.map[i][j].isMarked) marked++;
+        const cell = this.map[i][j];
+
+        if (cell.isVisible && !cell.isMine) {
+          empty++;
+        }
+
+        if (cell.isMarked) {
+          marked++;
+          if (cell.isMine) {
+            correct++;
+          }
+        }
       }
     }
 
@@ -237,12 +239,13 @@ export class GameComponent implements OnInit {
     if (this.status.empty + this.status.correct == this.cols * this.rows) {
       this.end = true;
       this.stopTimer();
-      this.message = "Gratulálunk, nyertél!";
+      this.message = "Congratulations, you win!";
     }
   }
 
-  // Időzítő
-  // Nap, óra, perc, másodperc
+  /**
+   * Start Timer and parse
+   */
   private startTimer(): void {
     this.interval = setInterval(() => {
       const time = { ...this.time };
@@ -264,10 +267,28 @@ export class GameComponent implements OnInit {
     }, 1000);
   }
 
-  // Időzítő leállítása
+  /**
+   * Stop Timer
+   */
   private stopTimer(): void {
     if (this.interval) {
       clearInterval(this.interval);
+    }
+  }
+
+  private walkthroughNeighbours(
+    i: number,
+    j: number,
+    fn: (x: number, y: number) => void
+  ): void {
+    for (let x = Math.max(i - 1, 0); x <= Math.min(i + 1, this.rows - 1); x++) {
+      for (
+        let y = Math.max(j - 1, 0);
+        y <= Math.min(j + 1, this.cols - 1);
+        y++
+      ) {
+        fn(x, y);
+      }
     }
   }
 }
