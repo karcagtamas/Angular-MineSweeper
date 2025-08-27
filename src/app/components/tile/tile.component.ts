@@ -3,9 +3,10 @@ import { Mine } from "../../models/mine";
 import { Coord } from "../../models/coord";
 
 @Component({
-  selector: "app-tile",
-  templateUrl: "./tile.component.html",
-  styleUrls: ["./tile.component.scss"],
+    selector: "app-tile",
+    templateUrl: "./tile.component.html",
+    styleUrls: ["./tile.component.scss"],
+    standalone: false
 })
 export class TileComponent {
   protected mine = input.required<Mine>(); // Mine

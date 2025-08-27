@@ -6,9 +6,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ElapsedTime } from "src/app/models/time";
 
 @Component({
-  selector: "app-game",
-  templateUrl: "./game.component.html",
-  styleUrls: ["./game.component.scss"],
+    selector: "app-game",
+    templateUrl: "./game.component.html",
+    styleUrls: ["./game.component.scss"],
+    standalone: false
 })
 export class GameComponent implements OnInit {
   private readonly currentLevel: Level = {

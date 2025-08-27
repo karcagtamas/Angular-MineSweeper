@@ -4,9 +4,10 @@ import { GameService } from "src/app/services/game.service";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: "app-game-configurator",
-  templateUrl: "./game-configurator.component.html",
-  styleUrl: "./game-configurator.component.scss",
+    selector: "app-game-configurator",
+    templateUrl: "./game-configurator.component.html",
+    styleUrl: "./game-configurator.component.scss",
+    standalone: false
 })
 export class GameConfiguratorComponent {
   protected levels: Level[] = LEVELS;

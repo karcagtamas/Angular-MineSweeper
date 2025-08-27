@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from "@angular/core";
 import { Level } from "../models/level.model";
 
 @Pipe({
-  name: "level",
+    name: "level",
+    standalone: false
 })
 export class LevelPipe implements PipeTransform {
   transform(id: number, levels: Level[]): string {
