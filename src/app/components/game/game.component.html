@@ -10,28 +10,34 @@
   </mat-card-actions>
   <mat-card-footer>
     @if (message) {
-    <div class="box message">
-      {{ message }}
-    </div>
+      <div class="box message">
+        {{ message }}
+      </div>
     } @else {
-    <div class="box details">
-      <div>Remaining mines: {{ mines - status.marked | count }}</div>
-      <div>Elapsed time: {{ time | elapsedTime }}</div>
-    </div>
+      <div class="box details">
+        <div>Remaining mines: {{ mines - status.marked | count }}</div>
+        <div>Elapsed time: {{ time | elapsedTime }}</div>
+      </div>
     }
   </mat-card-footer>
 </mat-card>
 
 <!-- Játék tábla -->
-<table class="text-center" *ngIf="game">
-  <tr *ngFor="let row of map">
-    <td *ngFor="let col of row">
-      <app-tile
-        [mine]="col"
-        (leftClick)="leftClick($event)"
-        (bomb)="bomb()"
-        (rightClick)="rightClick($event)"
-      ></app-tile>
-    </td>
-  </tr>
-</table>
+@if (game) {
+  <table class="text-center">
+    @for (row of map; track row) {
+      <tr>
+        @for (col of row; track col) {
+          <td>
+            <app-tile
+              [mine]="col"
+              (leftClick)="leftClick($event)"
+              (bomb)="bomb()"
+              (rightClick)="rightClick($event)"
+            ></app-tile>
+          </td>
+        }
+      </tr>
+    }
+  </table>
+}

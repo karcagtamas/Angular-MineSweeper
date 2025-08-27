@@ -3,7 +3,7 @@ import { ResolveFn } from "@angular/router";
 import { GameService } from "../services/game.service";
 import { Level } from "../models/level.model";
 
-export const gameResolver: ResolveFn<Level> = (route, state) => {
+export const gameResolver: ResolveFn<Level | null> = (route, state) => {
   const service = inject(GameService);
 
   return service.level;

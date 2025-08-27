@@ -1,4 +1,4 @@
-export class Level {
+export interface Level {
   id: number; // Szint id
   rows: number; // Sorok
   cols: number; // Oszlopok

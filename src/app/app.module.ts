@@ -19,8 +19,11 @@ import { ElapsedTimePipe } from "./pipes/elapsed-time.pipe";
 const materialModules = [MatCardModule, MatButtonModule, MatSelectModule];
 
 @NgModule({
-  declarations: [
-    AppComponent,
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ...materialModules,
     GameComponent,
     GameConfiguratorComponent,
     TileComponent,
@@ -28,7 +31,6 @@ const materialModules = [MatCardModule, MatButtonModule, MatSelectModule];
     LevelPipe,
     ElapsedTimePipe,
   ],
-  imports: [BrowserModule, AppRoutingModule, ...materialModules],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })

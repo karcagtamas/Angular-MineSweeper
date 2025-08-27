@@ -1,4 +1,4 @@
-export class Mine {
+export interface Mine {
   id: number; // Akna id
   x: number; // X pozició
   y: number; // Y pozició

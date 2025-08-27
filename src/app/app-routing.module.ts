@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { GameComponent } from "./components/game/game.component";
-import { GameConfiguratorComponent } from "./components/game-configurator/game-configurator.component";
+
+
 import { gameResolver } from "./resolvers/game.resolver";
 import { gameGuard } from "./guards/game.guard";
 
@@ -9,11 +9,11 @@ const routes: Routes = [
   {
     path: "",
     pathMatch: "full",
-    component: GameConfiguratorComponent,
+    loadComponent: () => import('./components/game-configurator/game-configurator.component').then(m => m.GameConfiguratorComponent),
   },
   {
     path: "game",
-    component: GameComponent,
+    loadComponent: () => import('./components/game/game.component').then(m => m.GameComponent),
     canActivate: [gameGuard],
     resolve: {
       level: gameResolver,

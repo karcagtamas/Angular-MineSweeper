@@ -1,17 +1,40 @@
 import { Mine } from "../../models/mine";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { Level } from "../../models/level.model";
 import { Coord } from "../../models/coord";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ElapsedTime } from "src/app/models/time";
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardActions,
+  MatCardFooter,
+} from "@angular/material/card";
+import { MatButton } from "@angular/material/button";
+import { TileComponent } from "../tile/tile.component";
+import { CountPipe } from "../../pipes/count.pipe";
+import { ElapsedTimePipe } from "../../pipes/elapsed-time.pipe";
 
 @Component({
-    selector: "app-game",
-    templateUrl: "./game.component.html",
-    styleUrls: ["./game.component.scss"],
-    standalone: false
+  selector: "app-game",
+  templateUrl: "./game.component.html",
+  styleUrls: ["./game.component.scss"],
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardActions,
+    MatButton,
+    MatCardFooter,
+    TileComponent,
+    CountPipe,
+    ElapsedTimePipe,
+  ],
 })
 export class GameComponent implements OnInit {
+  protected router = inject(Router);
+
   private readonly currentLevel: Level = {
     id: 0,
     rows: 9,
@@ -32,9 +55,11 @@ export class GameComponent implements OnInit {
   };
 
   protected time: ElapsedTime = { day: 0, hour: 0, min: 0, sec: 0 }; // Idők: nap, óra, perc, másodperc
-  private interval: NodeJS.Timeout | null = null; // Idő intervallum
+  private interval: NodeJS.Timeout | null = null;
 
-  constructor(protected router: Router, route: ActivatedRoute) {
+  constructor() {
+    const route = inject(ActivatedRoute);
+
     const level: Level = route.snapshot.data.level;
 
     this.currentLevel = { ...level };
