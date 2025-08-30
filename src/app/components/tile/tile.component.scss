@@ -1,9 +1,18 @@
-button {
+:host {
+  padding: 0;
   height: 3rem;
   width: 3rem;
-  color: white;
   font-weight: bold;
   background-color: rgba(0, 170, 255, 0.75);
+
+  button {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    border: unset;
+  }
 
   &.color0 {
     background-color: rgba(255, 0, 0, 0.2);
@@ -27,21 +36,27 @@ button {
 
   &.mine {
     background-color: rgba(255, 0, 0, 0.9);
-    color: black;
+
+    button {
+      color: black;
+    }
   }
 
   &.mark {
-    background-color: rgba(0, 255, 0, 0.75);
+    background-color: rgba(8, 160, 8, 0.75);
   }
 
   &:hover {
-    color: red;
     background-color: #0000ff;
+  }
+
+  button:hover {
+    color: red;
   }
 }
 
 @media screen and (max-width: 630px) {
-  button {
+  :host {
     height: 2rem;
     width: 2rem;
   }
@@ -52,7 +67,7 @@ button {
 }
 
 @media screen and (max-width: 420px) {
-  button {
+  :host {
     height: 1.5rem;
     width: 1.5rem;
   }

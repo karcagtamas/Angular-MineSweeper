@@ -1,25 +1,25 @@
-import { Mine } from "../../models/mine";
-import { Component, OnInit, inject } from "@angular/core";
-import { Level } from "../../models/level.model";
-import { Coord } from "../../models/coord";
-import { ActivatedRoute, Router } from "@angular/router";
-import { ElapsedTime } from "src/app/models/time";
+import { Mine } from '../../models/mine';
+import { Component, OnInit, inject } from '@angular/core';
+import { Level } from '../../models/level.model';
+import { Coord } from '../../models/coord';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ElapsedTime } from 'src/app/models/time';
 import {
   MatCard,
   MatCardHeader,
   MatCardTitle,
   MatCardActions,
   MatCardFooter,
-} from "@angular/material/card";
-import { MatButton } from "@angular/material/button";
-import { TileComponent } from "../tile/tile.component";
-import { CountPipe } from "../../pipes/count.pipe";
-import { ElapsedTimePipe } from "../../pipes/elapsed-time.pipe";
+} from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
+import { TileComponent } from '../tile/tile.component';
+import { CountPipe } from '../../pipes/count.pipe';
+import { ElapsedTimePipe } from '../../pipes/elapsed-time.pipe';
 
 @Component({
-  selector: "app-game",
-  templateUrl: "./game.component.html",
-  styleUrls: ["./game.component.scss"],
+  selector: 'app-game',
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.scss'],
   imports: [
     MatCard,
     MatCardHeader,
@@ -40,13 +40,13 @@ export class GameComponent implements OnInit {
     rows: 9,
     cols: 9,
     mines: 10,
-    name: "DEFAULT",
+    name: 'DEFAULT',
   };
   map: Mine[][] = []; // Pálya
 
   game: boolean = false; // Megy-e a játék (ha nem, nem jelenik meg a pálya)
   end: boolean = false; // Vége van-e a játéknak (ha nem, meg áll a játék és timer)
-  protected message: string = ""; // Message
+  protected message: string = ''; // Message
 
   protected status: { empty: number; correct: number; marked: number } = {
     empty: 0,
@@ -80,7 +80,7 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {}
 
   protected changeLevel() {
-    this.router.navigateByUrl("/");
+    this.router.navigateByUrl('/');
   }
 
   /**
@@ -199,7 +199,7 @@ export class GameComponent implements OnInit {
   protected bomb() {
     this.end = true;
     this.stopTimer();
-    this.message = "Have luck next time!";
+    this.message = 'Better luck next time!';
 
     // Show
     for (let i = 0; i < this.rows; i++) {
@@ -229,7 +229,7 @@ export class GameComponent implements OnInit {
    */
   private reset(): void {
     this.map = [];
-    this.message = "";
+    this.message = '';
     this.generateMap();
     this.selectMines(this.mines);
     this.calculateMineNeighbours();
@@ -265,7 +265,7 @@ export class GameComponent implements OnInit {
     if (this.status.empty + this.status.correct == this.cols * this.rows) {
       this.end = true;
       this.stopTimer();
-      this.message = "Congratulations, you win!";
+      this.message = 'Congratulations, you won!';
     }
   }
 
@@ -305,7 +305,7 @@ export class GameComponent implements OnInit {
   private walkthroughNeighbours(
     i: number,
     j: number,
-    fn: (x: number, y: number) => void
+    fn: (x: number, y: number) => void,
   ): void {
     for (let x = Math.max(i - 1, 0); x <= Math.min(i + 1, this.rows - 1); x++) {
       for (

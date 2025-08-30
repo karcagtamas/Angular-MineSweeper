@@ -4,7 +4,11 @@
   </mat-card-header>
   <mat-card-actions>
     <button mat-raised-button (click)="start()">
-      @if(game) { <span>Reset</span> } @else { <span>Start</span> }
+      @if (game) {
+        <span>Reset</span>
+      } @else {
+        <span>Start</span>
+      }
     </button>
     <button mat-raised-button (click)="changeLevel()">Change Level</button>
   </mat-card-actions>
@@ -27,14 +31,14 @@
   <table class="text-center">
     @for (row of map; track row) {
       <tr>
-        @for (col of row; track col) {
+        @for (col of row; track col.id) {
           <td>
             <app-tile
               [mine]="col"
               (leftClick)="leftClick($event)"
               (bomb)="bomb()"
               (rightClick)="rightClick($event)"
-            ></app-tile>
+            />
           </td>
         }
       </tr>

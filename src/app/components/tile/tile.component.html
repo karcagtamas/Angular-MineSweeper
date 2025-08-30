@@ -1,20 +1,17 @@
 <!-- Button -->
-<button
-  (click)="handleLeftClick()"
-  (contextmenu)="handleRightClick()"
-  class="btn border rounded {{
-    mine().value >= 0 && mine().isVisible ? 'color' + mine().value : ''
-  }}"
-  [ngClass]="{ mine: mine().isVisible && mine().isMine, mark: mine().isMarked }"
->
-  @if (mine().isVisible) { @if (mine().isMine) {
-  <!-- Simple value -->
-  <span class="fas fa-bomb"></span>
+<button (click)="handleLeftClick()" (contextmenu)="handleRightClick()">
+  @if (mine().isVisible) {
+    @if (mine().isMine) {
+      <!-- Simple value -->
+      <span class="fas fa-bomb"></span>
+    } @else {
+      <!-- Bomb value -->
+      <span>{{ mine().value }}</span>
+    }
   } @else {
-  <!-- Bomb value -->
-  <span>{{ mine().value }}</span>
-  } } @else { @if (mine().isMarked) {
-  <!-- Marked value -->
-  <span>&#9873;</span>
-  } }
+    @if (mine().isMarked) {
+      <!-- Marked value -->
+      <span>&#9873;</span>
+    }
+  }
 </button>
