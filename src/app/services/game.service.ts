@@ -1,19 +1,19 @@
-import { Injectable } from "@angular/core";
-import { Level } from "../models/level.model";
+import { Injectable } from '@angular/core';
+import { Level } from '../models/level.model';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class GameService {
   private _level: Level | null = null;
 
-  public get level(): Level | null {
+  get level(): Level | null {
     return this._level;
   }
 
-  public set level(level: Level) {
+  set level(level: Level) {
     this._level = level;
   }
 
-  public hasLevel(): boolean {
+  hasLevel(): boolean {
     return this.level != null;
   }
 }

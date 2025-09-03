@@ -1,10 +1,8 @@
-import { inject } from "@angular/core";
-import { ResolveFn } from "@angular/router";
-import { GameService } from "../services/game.service";
-import { Level } from "../models/level.model";
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { GameService } from '../services/game.service';
+import { Level } from '../models/level.model';
 
 export const gameResolver: ResolveFn<Level | null> = (route, state) => {
-  const service = inject(GameService);
-
-  return service.level;
+  return inject(GameService).level;
 };

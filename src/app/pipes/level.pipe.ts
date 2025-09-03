@@ -1,7 +1,7 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { Level } from "../models/level.model";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Level } from '../models/level.model';
 
-@Pipe({ name: "level" })
+@Pipe({ name: 'level' })
 export class LevelPipe implements PipeTransform {
   transform(id: number, levels: Level[]): string {
     const level = levels.find((x) => x.id === id);

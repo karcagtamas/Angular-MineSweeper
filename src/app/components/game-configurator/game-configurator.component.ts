@@ -1,27 +1,27 @@
-import { Component, inject } from "@angular/core";
-import { LEVELS, Level } from "../../models/level.model";
-import { GameService } from "src/app/services/game.service";
-import { Router } from "@angular/router";
+import { Component, inject } from '@angular/core';
+import { LEVELS, Level } from '../../models/level.model';
+import { GameService } from 'src/app/services/game.service';
+import { Router } from '@angular/router';
 import {
   MatCard,
   MatCardHeader,
   MatCardTitle,
   MatCardContent,
   MatCardActions,
-} from "@angular/material/card";
+} from '@angular/material/card';
 import {
   MatFormField,
   MatLabel,
   MatSelect,
   MatOption,
-} from "@angular/material/select";
-import { MatButton } from "@angular/material/button";
-import { LevelPipe } from "../../pipes/level.pipe";
+} from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { LevelPipe } from '../../pipes/level.pipe';
 
 @Component({
-  selector: "app-game-configurator",
-  templateUrl: "./game-configurator.component.html",
-  styleUrl: "./game-configurator.component.scss",
+  selector: 'app-game-configurator',
+  templateUrl: './game-configurator.component.html',
+  styleUrl: './game-configurator.component.scss',
   imports: [
     MatCard,
     MatCardHeader,
@@ -43,9 +43,7 @@ export class GameConfiguratorComponent {
   protected levels: Level[] = LEVELS;
   protected selected: number | null = null;
 
-  constructor() {}
-
-  select(id: number | null) {
+  protected select(id: number | null) {
     if (!id) {
       return;
     }
@@ -58,6 +56,6 @@ export class GameConfiguratorComponent {
 
     this.service.level = level;
 
-    this.router.navigateByUrl("/game");
+    this.router.navigateByUrl('/game');
   }
 }
