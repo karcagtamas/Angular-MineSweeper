@@ -1,13 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-import { gameResolver } from './resolvers/game.resolver';
+import { Routes } from '@angular/router';
 import { gameGuard } from './guards/game.guard';
+import { gameResolver } from './resolvers/game.resolver';
 
-const routes: Routes = [
+export const APP_ROUTES: Routes = [
   {
     path: '',
-    pathMatch: 'full',
     loadComponent: () =>
       import('./components/game-configurator/game-configurator.component').then(
         (m) => m.GameConfiguratorComponent,
@@ -23,9 +20,3 @@ const routes: Routes = [
     },
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}
