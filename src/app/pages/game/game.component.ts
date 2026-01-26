@@ -12,7 +12,7 @@ import {
   MatCardFooter,
 } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
-import { TileComponent } from '../tile/tile.component';
+import { TileComponent } from '../../components/tile/tile.component';
 import { CountPipe } from '../../pipes/count.pipe';
 import { ElapsedTimePipe } from '../../pipes/elapsed-time.pipe';
 

@@ -6,14 +6,12 @@ export const APP_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./components/game-configurator/game-configurator.component').then(
-        (m) => m.GameConfiguratorComponent,
-      ),
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
   },
   {
     path: 'game',
     loadComponent: () =>
-      import('./components/game/game.component').then((m) => m.GameComponent),
+      import('./pages/game/game.component').then((m) => m.GameComponent),
     canActivate: [gameGuard],
     resolve: {
       level: gameResolver,
