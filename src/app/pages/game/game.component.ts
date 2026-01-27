@@ -1,9 +1,8 @@
 import { Mine } from '../../models/mine';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Level } from '../../models/level.model';
 import { Coord } from '../../models/coord';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ElapsedTime } from 'src/app/models/time';
 import {
   MatCard,
   MatCardHeader,
@@ -35,6 +34,11 @@ import { ElapsedTimePipe } from '../../pipes/elapsed-time.pipe';
 export class GameComponent implements OnInit {
   protected router = inject(Router);
 
+  protected message = signal('');
+  protected game = signal(false); // Megy-e a játék (ha nem, nem jelenik meg a pálya)
+  protected end = signal(false); // Vége van-e a játéknak (ha nem, meg áll a játék és timer)
+  protected seconds = signal(0);
+
   private readonly currentLevel: Level = {
     id: 0,
     rows: 9,
@@ -44,17 +48,11 @@ export class GameComponent implements OnInit {
   };
   map: Mine[][] = []; // Pálya
 
-  game: boolean = false; // Megy-e a játék (ha nem, nem jelenik meg a pálya)
-  end: boolean = false; // Vége van-e a játéknak (ha nem, meg áll a játék és timer)
-  protected message: string = ''; // Message
-
   protected status: { empty: number; correct: number; marked: number } = {
     empty: 0,
     correct: 0,
     marked: 0,
   };
-
-  protected time: ElapsedTime = { day: 0, hour: 0, min: 0, sec: 0 }; // Idők: nap, óra, perc, másodperc
   private interval: NodeJS.Timeout | null = null;
 
   constructor() {
@@ -197,9 +195,9 @@ export class GameComponent implements OnInit {
    * Handle click on bomb. It stops the game and the timer.
    */
   protected bomb() {
-    this.end = true;
+    this.end.set(true);
     this.stopTimer();
-    this.message = 'Better luck next time!';
+    this.message.set('Better luck next time!');
 
     // Show
     for (let i = 0; i < this.rows; i++) {
@@ -216,11 +214,11 @@ export class GameComponent implements OnInit {
    * Make the game ready and start it.
    */
   protected start(): void {
-    this.end = false;
-    this.game = true;
+    this.end.set(false);
+    this.game.set(true);
     this.reset();
     this.stopTimer();
-    this.time = { day: 0, hour: 0, min: 0, sec: 0 };
+    this.seconds.set(0);
     this.startTimer();
   }
 
@@ -229,7 +227,7 @@ export class GameComponent implements OnInit {
    */
   private reset(): void {
     this.map = [];
-    this.message = '';
+    this.message.set('');
     this.generateMap();
     this.selectMines(this.mines);
     this.calculateMineNeighbours();
@@ -263,9 +261,9 @@ export class GameComponent implements OnInit {
     this.status = { empty, correct, marked };
 
     if (this.status.empty + this.status.correct == this.cols * this.rows) {
-      this.end = true;
+      this.end.set(true);
       this.stopTimer();
-      this.message = 'Congratulations, you won!';
+      this.message.set('Congratulations, you won!');
     }
   }
 
@@ -274,22 +272,7 @@ export class GameComponent implements OnInit {
    */
   private startTimer(): void {
     this.interval = setInterval(() => {
-      const time = { ...this.time };
-      time.sec++;
-      if (time.sec == 60) {
-        time.min++;
-        time.sec = 0;
-      }
-      if (time.min == 60) {
-        time.hour++;
-        time.min = 0;
-      }
-      if (time.hour == 24) {
-        time.day++;
-        time.hour = 0;
-      }
-
-      this.time = { ...time };
+      this.seconds.update((s) => s + 1);
     }, 1000);
   }
 

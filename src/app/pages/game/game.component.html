@@ -1,10 +1,30 @@
-<mat-card>
+<!-- Játék tábla -->
+<mat-card id="table-container">
+  @if (game()) {
+    <div id="table">
+      @for (row of map; track row) {
+        <div class="row">
+          @for (col of row; track col.id) {
+            <app-tile
+              [mine]="col"
+              (leftClick)="leftClick($event)"
+              (bomb)="bomb()"
+              (rightClick)="rightClick($event)"
+            />
+          }
+        </div>
+      }
+    </div>
+  }
+</mat-card>
+
+<mat-card id="info-container">
   <mat-card-header>
-    <mat-card-title>Mine Sweeper</mat-card-title>
+    <mat-card-title>Info</mat-card-title>
   </mat-card-header>
   <mat-card-actions>
     <button mat-raised-button (click)="start()">
-      @if (game) {
+      @if (game()) {
         <span>Reset</span>
       } @else {
         <span>Start</span>
@@ -12,36 +32,21 @@
     </button>
     <button mat-raised-button (click)="changeLevel()">Change Level</button>
   </mat-card-actions>
+
   <mat-card-footer>
-    @if (message) {
+    @if (message()) {
       <div class="box message">
-        {{ message }}
+        {{ message() }}
       </div>
     } @else {
       <div class="box details">
-        <div>Remaining mines: {{ mines - status.marked | count }}</div>
-        <div>Elapsed time: {{ time | elapsedTime }}</div>
+        <div class="remaining-mines">
+          <strong>Remaining mines</strong>: {{ mines - status.marked | count }}
+        </div>
+        <div class="elapsed-time">
+          <strong>Elapsed time</strong>: {{ seconds() | elapsedTime }}
+        </div>
       </div>
     }
   </mat-card-footer>
 </mat-card>
-
-<!-- Játék tábla -->
-@if (game) {
-  <table class="text-center">
-    @for (row of map; track row) {
-      <tr>
-        @for (col of row; track col.id) {
-          <td>
-            <app-tile
-              [mine]="col"
-              (leftClick)="leftClick($event)"
-              (bomb)="bomb()"
-              (rightClick)="rightClick($event)"
-            />
-          </td>
-        }
-      </tr>
-    }
-  </table>
-}
